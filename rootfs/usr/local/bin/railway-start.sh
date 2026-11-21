@@ -8,6 +8,7 @@ log() { echo "=> [railway] $*"; }
 export PORT="${PORT:-80}"
 export DB_PORT="${DB_PORT:-3306}"
 export APACHE_MAX_WORKERS="${APACHE_MAX_WORKERS:-10}"
+export PHP_MEMORY_LIMIT="${PHP_MEMORY_LIMIT:-384M}"
 
 for v in DB_HOST DB_NAME DB_USER DB_PASSWORD; do
     if [ -z "${!v:-}" ]; then

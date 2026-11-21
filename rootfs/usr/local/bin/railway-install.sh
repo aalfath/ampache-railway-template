@@ -26,7 +26,8 @@ log "creating the admin user '$ADMIN_USER'"
 args=(-p "$AMPACHE_ADMIN_PASSWORD" -l 100)
 [ -n "${AMPACHE_ADMIN_EMAIL:-}" ] && args+=(-e "$AMPACHE_ADMIN_EMAIL")
 # The CLI prints the password; keep it out of the logs.
-if ! as_www $CLI admin:addUser "${args[@]}" "$ADMIN_USER" 2>&1 | grep -q 'Created'; then
+out=$(as_www $CLI admin:addUser "${args[@]}" "$ADMIN_USER" 2>&1) || true
+if ! printf '%s' "$out" | grep 'Created' >/dev/null; then
     rm /data/config/ampache.cfg.php
     log "ERROR: creating the admin user failed"
     exit 1

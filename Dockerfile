@@ -16,13 +16,17 @@ RUN set -eu; \
     ln -s /data/media /media; \
     chmod 0755 /usr/local/bin/railway-config.php /usr/local/bin/railway-start.sh /usr/local/bin/railway-install.sh; \
     a2enconf railway >/dev/null; \
+    sed -i 's/php_admin_value memory_limit -1/php_admin_value memory_limit ${PHP_MEMORY_LIMIT}/' /etc/apache2/sites-available/001-ampache.conf; \
+    grep -q 'memory_limit ${PHP_MEMORY_LIMIT}' /etc/apache2/sites-available/001-ampache.conf; \
     php -v >/dev/null; \
     test -x /var/www/bin/installer; \
     test -f /var/tmp/ampache.cfg.php.dist
 
 # Railway routes the public domain to PORT; Apache listens on it (80 when unset).
+# PHP_MEMORY_LIMIT caps one web request (upstream: unlimited), so a big scan can't take the whole service.
 ENV PORT=80 \
-    APACHE_MAX_WORKERS=10
+    APACHE_MAX_WORKERS=10 \
+    PHP_MEMORY_LIMIT=384M
 EXPOSE 80
 
 # Our start script replaces the base entrypoint (it does the same permission fixes for /data).
