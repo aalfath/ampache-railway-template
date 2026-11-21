@@ -16,6 +16,7 @@ The image is Ampache's official [`ampache/ampache:nosql8.4.0`](https://hub.docke
 - `railway-start.sh`: links `/var/www/config`, `/var/www/backup` and `/media` to the `/data` volume, makes Apache listen on `PORT`, waits for MariaDB, installs or upgrades Ampache, then runs Apache. If Apache stops unexpectedly the container exits non-zero, so Railway restarts it.
 - `railway-install.sh` (first start only): creates the database schema, the admin user from `AMPACHE_ADMIN_USER` / `AMPACHE_ADMIN_PASSWORD`, a `music` catalog at `/media/music`, and enables web uploads into it.
 - `railway-config.php`: keeps the database settings in `ampache.cfg.php` in line with the Railway variables and sets Railway's HTTPS settings (`force_ssl`, secure cookies, port 443).
+- `/healthz` answers 200 once Ampache is configured and MariaDB answers (Railway's health check).
 - Apache is limited to 10 workers and PHP to 384 MB per request, so Ampache runs within a 0.5 GB service (Railway's Free plan). Uploads up to 512 MB per file.
 
 ## Variables
